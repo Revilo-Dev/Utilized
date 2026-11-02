@@ -1,4 +1,4 @@
-package com.example.examplemod;
+package com.example.tweaks;
 
 import org.slf4j.Logger;
 
@@ -12,6 +12,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Tiers;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -32,40 +33,58 @@ import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
-@Mod(ExampleMod.MODID)
-public class ExampleMod {
+@Mod(Tweaks.MODID)
+public class Tweaks {
     // Define mod id in a common place for everything to reference
-    public static final String MODID = "examplemod";
+    public static final String MODID = "tweaks";
     // Directly reference a slf4j logger
     public static final Logger LOGGER = LogUtils.getLogger();
-    // Create a Deferred Register to hold Blocks which will all be registered under the "examplemod" namespace
+    // Create a Deferred Register to hold Blocks which will all be registered under the "tweaks" namespace
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
-    // Create a Deferred Register to hold Items which will all be registered under the "examplemod" namespace
+    // Create a Deferred Register to hold Items which will all be registered under the "tweaks" namespace
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
-    // Create a Deferred Register to hold CreativeModeTabs which will all be registered under the "examplemod" namespace
+    // Create a Deferred Register to hold CreativeModeTabs which will all be registered under the "tweaks" namespace
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
 
-    // Creates a new Block with the id "examplemod:example_block", combining the namespace and path
+    // Creates a new Block with the id "tweaks:example_block", combining the namespace and path
     public static final DeferredBlock<Block> EXAMPLE_BLOCK = BLOCKS.registerSimpleBlock("example_block", BlockBehaviour.Properties.of().mapColor(MapColor.STONE));
-    // Creates a new BlockItem with the id "examplemod:example_block", combining the namespace and path
+    // Creates a new BlockItem with the id "tweaks:example_block", combining the namespace and path
     public static final DeferredItem<BlockItem> EXAMPLE_BLOCK_ITEM = ITEMS.registerSimpleBlockItem("example_block", EXAMPLE_BLOCK);
 
-    // Creates a new food item with the id "examplemod:example_id", nutrition 1 and saturation 2
+    // Creates a new food item with the id "tweaks:example_id", nutrition 1 and saturation 2
     public static final DeferredItem<Item> EXAMPLE_ITEM = ITEMS.registerSimpleItem("example_item", new Item.Properties().food(new FoodProperties.Builder()
             .alwaysEdible().nutrition(1).saturationModifier(2f).build()));
 
-    // Creates a creative tab with the id "examplemod:example_tab" for the example item, that is placed after the combat tab
-    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.register("example_tab", () -> CreativeModeTab.builder()
-            .title(Component.translatable("itemGroup.examplemod")) //The language key for the title of your CreativeModeTab
+    public static final DeferredItem<HammerItem> WOODEN_HAMMER = registerHammer("wooden_hammer", Tiers.WOOD);
+    public static final DeferredItem<HammerItem> STONE_HAMMER = registerHammer("stone_hammer", Tiers.STONE);
+    public static final DeferredItem<HammerItem> IRON_HAMMER = registerHammer("iron_hammer", Tiers.IRON);
+    public static final DeferredItem<HammerItem> GOLDEN_HAMMER = registerHammer("golden_hammer", Tiers.GOLD);
+    public static final DeferredItem<HammerItem> DIAMOND_HAMMER = registerHammer("diamond_hammer", Tiers.DIAMOND);
+    public static final DeferredItem<HammerItem> NETHERITE_HAMMER = ITEMS.register("netherite_hammer",
+            () -> new HammerItem(Tiers.NETHERITE, new Item.Properties().fireResistant()));
+
+    // Creates a creative tab with the id "tweaks:tweaks_tab" for the example item, that is placed after the combat tab
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TWEAKS_TAB = CREATIVE_MODE_TABS.register("tweaks_tab", () -> CreativeModeTab.builder()
+            .title(Component.translatable("itemGroup.tweaks")) //The language key for the title of your CreativeModeTab
             .withTabsBefore(CreativeModeTabs.COMBAT)
             .icon(() -> EXAMPLE_ITEM.get().getDefaultInstance())
             .displayItems((parameters, output) -> {
                 output.accept(EXAMPLE_ITEM.get()); // Add the example item to the tab. For your own tabs, this method is preferred over the event
+                output.accept(WOODEN_HAMMER.get());
+                output.accept(STONE_HAMMER.get());
+                output.accept(IRON_HAMMER.get());
+                output.accept(GOLDEN_HAMMER.get());
+                output.accept(DIAMOND_HAMMER.get());
+                output.accept(NETHERITE_HAMMER.get());
             }).build());
+
+    private static DeferredItem<HammerItem> registerHammer(String name, net.minecraft.world.item.Tier tier) {
+        return ITEMS.register(name, () -> new HammerItem(tier, new Item.Properties()));
+    }
 
     // The constructor for the mod class is the first code that is run when your mod is loaded.
     // FML will recognize some parameter types like IEventBus or ModContainer and pass them in automatically.
-    public ExampleMod(IEventBus modEventBus, ModContainer modContainer) {
+    public Tweaks(IEventBus modEventBus, ModContainer modContainer) {
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
 
@@ -77,7 +96,7 @@ public class ExampleMod {
         CREATIVE_MODE_TABS.register(modEventBus);
 
         // Register ourselves for server and other game events we are interested in.
-        // Note that this is necessary if and only if we want *this* class (ExampleMod) to respond directly to events.
+        // Note that this is necessary if and only if we want *this* class (Tweaks) to respond directly to events.
         // Do not add this line if there are no @SubscribeEvent-annotated functions in this class, like onServerStarting() below.
         NeoForge.EVENT_BUS.register(this);
 

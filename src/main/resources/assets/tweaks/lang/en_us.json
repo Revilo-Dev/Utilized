@@ -1,0 +1,19 @@
+{
+  "itemGroup.tweaks": "Tweaks",
+  "block.tweaks.example_block": "Example Block",
+  "item.tweaks.example_item": "Example Item",
+  "item.tweaks.wooden_hammer": "Wooden Hammer",
+  "item.tweaks.stone_hammer": "Stone Hammer",
+  "item.tweaks.iron_hammer": "Iron Hammer",
+  "item.tweaks.golden_hammer": "Golden Hammer",
+  "item.tweaks.diamond_hammer": "Diamond Hammer",
+  "item.tweaks.netherite_hammer": "Netherite Hammer",
+
+  "tweaks.configuration.title": "Tweaks Configs",
+  "tweaks.configuration.section.tweaks.common.toml": "Tweaks Configs",
+  "tweaks.configuration.section.tweaks.common.toml.title": "Tweaks Configs",
+  "tweaks.configuration.items": "Item List",
+  "tweaks.configuration.logDirtBlock": "Log Dirt Block",
+  "tweaks.configuration.magicNumberIntroduction": "Magic Number Text",
+  "tweaks.configuration.magicNumber": "Magic Number"
+}
