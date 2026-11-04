@@ -1,4 +1,4 @@
-package com.example.tweaks;
+package com.revilodev.tweaks;
 
 import java.util.Map;
 import java.util.UUID;
@@ -19,7 +19,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
-// A pickaxe that mines a 3x3 area on the face being mined
 @EventBusSubscriber(modid = Tweaks.MODID)
 public class HammerItem extends PickaxeItem {
     private static final Map<UUID, Direction> LAST_HIT_FACES = new ConcurrentHashMap<>();

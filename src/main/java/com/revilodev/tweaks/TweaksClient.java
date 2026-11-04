@@ -1,31 +1,35 @@
-package com.example.tweaks;
+package com.revilodev.tweaks;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.KeyMapping;
+import com.mojang.blaze3d.platform.InputConstants;
+import org.lwjgl.glfw.GLFW;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.neoforge.client.gui.ConfigurationScreen;
-import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 
-// This class will not load on dedicated servers. Accessing client side code from here is safe.
 @Mod(value = Tweaks.MODID, dist = Dist.CLIENT)
-// You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
 @EventBusSubscriber(modid = Tweaks.MODID, value = Dist.CLIENT)
 public class TweaksClient {
+    private static final KeyMapping TOGGLE_MAGNET = new KeyMapping(
+            "key.tweaks.toggle_magnet", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_F6, "key.categories.tweaks");
+
     public TweaksClient(ModContainer container) {
-        // Allows NeoForge to create a config screen for this mod's configs.
-        // The config screen is accessed by going to the Mods screen > clicking on your mod > clicking on config.
-        // Do not forget to add translations for your config options to the en_us.json file.
-        container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
     }
 
     @SubscribeEvent
-    static void onClientSetup(FMLClientSetupEvent event) {
-        // Some client setup code
-        Tweaks.LOGGER.info("HELLO FROM CLIENT SETUP");
-        Tweaks.LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
+    static void registerKeys(RegisterKeyMappingsEvent event) {
+        event.register(TOGGLE_MAGNET);
+    }
+
+    @SubscribeEvent
+    static void onClientTick(ClientTickEvent.Post event) {
+        while (TOGGLE_MAGNET.consumeClick()) {
+            PacketDistributor.sendToServer(ToggleMagnetPayload.INSTANCE);
+        }
     }
 }
